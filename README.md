@@ -1,3 +1,0 @@
-# example
-N/A
-# example

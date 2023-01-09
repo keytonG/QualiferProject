@@ -2,10 +2,14 @@ import os
 import openai
 import json
 import time
+from colorama import Fore, Back, Style
+print(Fore.RED + Back.WHITE + "!! IF CODE STOPS UNEXPECTEDLY (FOR MORE THAN 1 MINUTE), RESTART !!")
+print(Style.RESET_ALL)
 
 print("Starting...")
 
-openai.api_key = os.getenv("openaiKey")
+openai.api_key = str(input("ENTER API KEY: "))
+
 
 def clear():
 	try:
@@ -65,21 +69,32 @@ def openAICall():
 	
 	c,l = 0,7
 	for i in prompts:
-		c +=1
-		print("Sending Request to server...")
-		x = openai.Completion.create(
-	  model="text-davinci-003",
-	  prompt=i[0],
-	  temperature=0.83,
-	  max_tokens=64,
-	  top_p=1,
-	  frequency_penalty=0,
-	  presence_penalty=0
-	)
-		
+		try:
+			c +=1
+			print("Sending Request to server...")
+			x = openai.Completion.create(
+			model="text-davinci-003",
+			prompt=i[0],
+			temperature=0.83,
+			max_tokens=64,
+			top_p=1,
+			frequency_penalty=0,
+			presence_penalty=0
+		)
+		except openai.error.ServiceUnavailableError:
+			quit("The server is currently unavailible. Try again soon.\n (Refer to errors.md with Code 0 for more information.)")
+		except openai.error.RateLimitError:
+			quit("Rate limited.\n (Refer to errors.md with Code 1 for more information.)")
+		except openai.error.Timeout:
+			quit("Server timed out.\n (Refer to errors.md with Code 2 for more information.)")
+		except openai.error.AuthenticationError:
+			quit("The server could not authenticate the supplied API key, or the key is invalid.\n (Refer to errors.md with Code 3 for more information.)")
+		except:
+			quit("An unknown error occured while contacting the server.\n (Refer to errors.md with Code 4 for more information.)")
+			
 		y.extend(digestJSON(str(x)))
 		print(f"Complete! ({c}/{l})")
-
+		
 print("Contacting server...")
 openAICall()
 
@@ -209,7 +224,7 @@ def menu():
 
 print("Menu ready!")
 print("Starting...")
-time.sleep(10)
+time.sleep(3)
 clear()
 
 while True:
