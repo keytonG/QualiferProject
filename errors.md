@@ -11,9 +11,9 @@ This error can also be triggered if the server is overloaded.
 Wait 2-5 minutes before running the program again.
 
 # Code 2 (openai.error.Timeout)
-The connection to the server timed out.
-Either the request wasn't recieved, or there was a server error.
-Try running the program again.
+The server took too long to respond. 
+Either the request wasn't recieved, or there was a server error. 
+Try running the program again. 
 
 # Code 3 (openai.error.AuthenticationError)
 The server could not authenticate the supplied API key.

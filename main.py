@@ -3,12 +3,14 @@ import openai
 import json
 import time
 from colorama import Fore, Back, Style
+import pwinput
+from pwinput import pwinput as pwin
 print(Fore.RED + Back.WHITE + "!! IF CODE STOPS UNEXPECTEDLY (FOR MORE THAN 1 MINUTE), RESTART !!")
 print(Style.RESET_ALL)
 
 print("Starting...")
 
-openai.api_key = str(input("ENTER API KEY: "))
+openai.api_key = str(pwin("ENTER API KEY: ", mask='*'))
 
 
 def clear():
@@ -63,7 +65,7 @@ def openAICall():
 		["product sold in a retail store and it's price:",1],
 		["product sold in a retail store and it's price:",1],
 		["product sold in a retail store and it's price:",1],
-		["list of operating hours for a retail store:",2]
+		["list of operating hours for a retail store for monday to friday:",2]
 	] #last object in list designates prompt type
 		#0 = store name, 1 = product & price, 2 = operating hours
 	
@@ -102,7 +104,7 @@ openAICall()
 menuVariables = {
 	"storeName":"",
 	"products": [],
-	"storeHours":None
+	"storeHours":["\nClosed on weekends."]
 }
 
 print("Processing responses...")
@@ -123,7 +125,7 @@ for i in y:
 			menuVariables['products'].extend(i['content'])
 
 		elif c == 7:
-			menuVariables['storeHours'] = i['content']
+			menuVariables['storeHours'] += i['content']
 		print(f"Completed! {c}/{l}")
 
 
@@ -201,16 +203,16 @@ def menu():
 		try:
 			uInput = int(input(""))
 			print(uInput)
-			if uInput > 4 or uInput < 1:
+			if uInput > 3 or uInput < 1:
 				clear()
-				print("Please select only 1 menu option. Returning to menu in 10 seconds...")
+				print("Enter the option you'd like to select's corresponding number to select it.\nReturning to menu in 10 seconds...")
 				time.sleep(10)
 				clear()
 				continue
 			break
 		except:
 			clear()
-			print("Enter the option's list number to select it. Returning to menu in 10 seconds...")
+			print("Enter the option's list number to select it.\nReturning to menu in 10 seconds...")
 			time.sleep(10)
 			clear()
 			continue
